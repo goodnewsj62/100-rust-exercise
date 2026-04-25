@@ -1,3 +1,5 @@
+use std::mem::size_of;
+
 // Define a struct named `Order` with the following fields:
 // - `price`, an unsigned integer
 // - `quantity`, an unsigned integer
@@ -5,12 +7,29 @@
 // It should also have a method named `is_available` that returns a `true` if the quantity is
 // greater than 0, otherwise `false`.
 
+struct Order {
+    price: usize,
+    quantity: usize,
+}
+
+impl Order {
+    fn is_available(&self) -> bool {
+        if self.quantity > 1 {
+            return true;
+        }
+
+        false
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_order_is_available() {
+        println!("0-------------0{}", size_of::<usize>());
+
         let order = Order {
             price: 100,
             quantity: 10,
