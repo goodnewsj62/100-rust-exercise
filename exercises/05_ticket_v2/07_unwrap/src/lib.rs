@@ -2,7 +2,7 @@
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
 fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
-    todo!()
+    Ticket::new(title, description, status).unwrap()
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -27,16 +27,15 @@ impl Ticket {
         if title.len() > 50 {
             return Err("Title cannot be longer than 50 bytes".to_string());
         }
-        if description.is_empty() {
-            return Err("Description cannot be empty".to_string());
-        }
-        if description.len() > 500 {
-            return Err("Description cannot be longer than 500 bytes".to_string());
+
+        let mut updated_description = description;
+        if updated_description.is_empty() || updated_description.len() > 500 {
+            updated_description = "Description not provided".to_string();
         }
 
         Ok(Ticket {
             title,
-            description,
+            description: updated_description,
             status,
         })
     }

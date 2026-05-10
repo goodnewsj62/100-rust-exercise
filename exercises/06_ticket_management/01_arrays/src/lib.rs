@@ -1,9 +1,14 @@
 // TODO: Flesh out the `WeekTemperatures` struct and its method implementations to pass the tests.
 
 pub struct WeekTemperatures {
-    // TODO
+    values: [WeekDayTemperature; 7],
 }
 
+pub struct WeekDayTemperature {
+    temperature: Option<i32>,
+    weekday: Weekday,
+}
+#[derive(Debug, PartialEq)]
 pub enum Weekday {
     Monday,
     Tuesday,
@@ -16,15 +21,62 @@ pub enum Weekday {
 
 impl WeekTemperatures {
     pub fn new() -> Self {
-        todo!()
+        let values = [
+            WeekDayTemperature {
+                weekday: Weekday::Monday,
+                temperature: None,
+            },
+            WeekDayTemperature {
+                weekday: Weekday::Tuesday,
+                temperature: None,
+            },
+            WeekDayTemperature {
+                weekday: Weekday::Wednesday,
+                temperature: None,
+            },
+            WeekDayTemperature {
+                weekday: Weekday::Thursday,
+                temperature: None,
+            },
+            WeekDayTemperature {
+                weekday: Weekday::Friday,
+                temperature: None,
+            },
+            WeekDayTemperature {
+                weekday: Weekday::Saturday,
+                temperature: None,
+            },
+            WeekDayTemperature {
+                weekday: Weekday::Sunday,
+                temperature: None,
+            },
+        ];
+
+        WeekTemperatures { values }
     }
 
     pub fn get_temperature(&self, day: Weekday) -> Option<i32> {
-        todo!()
+        let values = &self.values;
+
+        for WeekDayTemperature {
+            temperature,
+            weekday,
+        } in values
+        {
+            if *weekday == day {
+                return *temperature;
+            }
+        }
+
+        None
     }
 
     pub fn set_temperature(&mut self, day: Weekday, temperature: i32) {
-        todo!()
+        for val in &mut self.values {
+            if val.weekday == day {
+                val.temperature = Some(temperature);
+            }
+        }
     }
 }
 

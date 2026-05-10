@@ -6,6 +6,8 @@
 // You also need to add a `get` method that takes as input a `TicketId`
 // and returns an `Option<&Ticket>`.
 
+use std::collections::HashSet;
+
 use ticket_fields::{TicketDescription, TicketTitle};
 
 #[derive(Clone)]
@@ -44,8 +46,21 @@ impl TicketStore {
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
-        self.tickets.push(ticket);
+    pub fn add_ticket(&mut self, ticket: TicketDraft) -> TicketId {
+        let ticket_id = TicketId(self.tickets.len() as u64);
+
+        self.tickets.push(Ticket {
+            id: ticket_id,
+            title: ticket.title,
+            description: ticket.description,
+            status: Status::ToDo,
+        });
+
+        ticket_id
+    }
+
+    pub fn get(&self, index: TicketId) -> Option<&Ticket> {
+        self.tickets.get(index.0 as usize)
     }
 }
 

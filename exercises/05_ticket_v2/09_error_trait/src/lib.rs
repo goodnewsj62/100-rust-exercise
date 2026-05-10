@@ -3,6 +3,10 @@
 //  The docs for the `std::fmt` module are a good place to start and look for examples:
 //  https://doc.rust-lang.org/std/fmt/index.html#write
 
+use std::error::Error;
+use std::fmt::{write, Display};
+
+#[derive(Debug)]
 enum TicketNewError {
     TitleError(String),
     DescriptionError(String),
@@ -13,8 +17,37 @@ enum TicketNewError {
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
 fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
-    todo!()
+    if title.is_empty() {
+        panic!("Title cannot be empty");
+    }
+    if title.len() > 50 {
+        panic!("Title cannot be longer than 50 bytes");
+    }
+
+    let mut final_description = description;
+
+    if final_description.is_empty() || final_description.len() > 500 {
+        final_description = String::from("Description not provided");
+    }
+
+    Ticket {
+        title,
+        description: final_description,
+        status,
+    }
 }
+
+impl Display for TicketNewError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let message = match &self {
+            TicketNewError::DescriptionError(value) => value,
+            TicketNewError::TitleError(value) => value,
+        };
+        write!(f, "{}", message)
+    }
+}
+
+impl Error for TicketNewError {}
 
 #[derive(Debug, PartialEq, Clone)]
 struct Ticket {
@@ -46,20 +79,14 @@ impl Ticket {
                 "Title cannot be longer than 50 bytes".to_string(),
             ));
         }
-        if description.is_empty() {
-            return Err(TicketNewError::DescriptionError(
-                "Description cannot be empty".to_string(),
-            ));
-        }
-        if description.len() > 500 {
-            return Err(TicketNewError::DescriptionError(
-                "Description cannot be longer than 500 bytes".to_string(),
-            ));
+        let mut updated_description = description;
+        if updated_description.is_empty() || updated_description.len() > 500 {
+            updated_description = "Description not provided".to_string();
         }
 
         Ok(Ticket {
             title,
-            description,
+            description: updated_description,
             status,
         })
     }
